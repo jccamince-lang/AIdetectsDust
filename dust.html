@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dust Analysis</title>
+</head>
+<body>
+  <h1>Dust Analysis Prototype</h1>
+  <video id="cameraFeed" width="640" height="480" autoplay></video>
+  <canvas id="overlay" width="640" height="480"></canvas>
+
+  <script>
+    const video = document.getElementById('cameraFeed');
+    const canvas = document.getElementById('overlay');
+    const ctx = canvas.getContext('2d');
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => video.srcObject = stream)
+      .catch(err => console.error("Camera error:", err));
+
+    // Simulated real-time dust overlay
+    function drawBlueOverlay() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.drawImage(video,0,0,canvas.width,canvas.height);
+
+      // Simulate dust: blue semi-transparent dots
+      for(let i=0;i<150;i++){
+        ctx.fillStyle = `rgba(0,0,255,${Math.random() * 0.5})`;
+        ctx.fillRect(Math.random()*640, Math.random()*480, 10, 10);
+      }
+      requestAnimationFrame(drawBlueOverlay);
+    }
+
+    drawBlueOverlay();
+  </script>
+</body>
+</html>
