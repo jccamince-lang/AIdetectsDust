@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Dust Visualization App</title>
+  <style>
+    body { text-align: center; font-family: Arial; }
+    video, canvas { border: 1px solid black; margin-top: 20px; }
+    button { margin: 10px; padding: 10px 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>AI Dust Visualization Prototype</h1>
+  
+  <video id="cameraFeed" width="640" height="480" autoplay></video>
+  <canvas id="overlay" width="640" height="480"></canvas>
+  
+  <div>
+    <button id="captureBtn">Capture True Color</button>
+    <a id="downloadBtn" href="#" download="true_color.png">Download True Color</a>
+  </div>
+  
+  <script>
+    const video = document.getElementById('cameraFeed');
+    const canvas = document.getElementById('overlay');
+    const ctx = canvas.getContext('2d');
+    const captureBtn = document.getElementById('captureBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    // Start camera
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => video.srcObject = stream)
+      .catch(err => console.error("Camera error:", err));
+
+    // Capture frame
+    captureBtn.addEventListener('click', () => {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imgData = canvas.toDataURL('image/png');
+      downloadBtn.href = imgData;
+      alert("True color captured! You can now download.");
+      setTimeout(() => window.location.href = "dust.html", 2000); // Redirect
+    });
+  </script>
+</body>
+</html>
